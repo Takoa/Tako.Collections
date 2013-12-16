@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tako.Collections", "Tako.Collections\Tako.Collections.csproj", "{2E79EECE-4EC7-4B4C-9FA5-EB8DECA84510}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestLibrary", "TestLibrary\TestLibrary.csproj", "{BA381B18-31B6-42C5-8A96-454CA299038A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2E79EECE-4EC7-4B4C-9FA5-EB8DECA84510}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E79EECE-4EC7-4B4C-9FA5-EB8DECA84510}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E79EECE-4EC7-4B4C-9FA5-EB8DECA84510}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E79EECE-4EC7-4B4C-9FA5-EB8DECA84510}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA381B18-31B6-42C5-8A96-454CA299038A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA381B18-31B6-42C5-8A96-454CA299038A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA381B18-31B6-42C5-8A96-454CA299038A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA381B18-31B6-42C5-8A96-454CA299038A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
