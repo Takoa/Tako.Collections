@@ -90,6 +90,11 @@ namespace Tako.Collections.Generic
 
         public void Add(TKey key, TValue value)
         {
+            if (key == null)
+            {
+                throw new ArgumentNullException("key");
+            }
+
             this.Add(ref this.root_, key, value);
             root_.IsRed = false;
             this.Count++;
@@ -97,13 +102,23 @@ namespace Tako.Collections.Generic
 
         public bool Remove(TKey key)
         {
-            this.Count--;
+            bool result = this.Remove(ref this.root_, key);
 
-            return this.Remove(ref this.root_, key);
+            if (result)
+            {
+                this.Count--;
+            }
+
+            return result;
         }
 
         public bool ContainsKey(TKey key)
         {
+            if (key == null)
+            {
+                throw new ArgumentNullException("key");
+            }
+
             return this.FindNode(this.root_, key) != null;
         }
 
@@ -154,17 +169,17 @@ namespace Tako.Collections.Generic
 
         void ICollection<KeyValuePair<TKey, TValue>>.CopyTo(KeyValuePair<TKey, TValue>[] array, int index)
         {
-            if (array != null)
+            if (array == null)
             {
                 throw new ArgumentNullException();
             }
 
-            if (index < 0)
+            if (index < 0 || this.Count <= index)
             {
                 throw new ArgumentOutOfRangeException();
             }
 
-            if (this.Count < index || array.Length - index < this.Count)
+            if (array.Length - index < this.Count)
             {
                 throw new ArgumentException();
             }
