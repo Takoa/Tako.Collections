@@ -7,7 +7,7 @@ Contains implementation of
     - [Robert Sedgewick. Left-leaning Red–Black Trees][1]
     - [Robert Sedgewick. Left-Leaning Red–Black Trees (slides)][2]
 - Ordered List based on LLRB tree
-    - You can use it like System.Data.Collections.List`<T>`, but the performance is of LLRB.
+    - You can use it like System.Collections.Generic.List&lt;T&gt;, but the performance is of LLRB.
 
 > Takao Kaburaki  
 >
