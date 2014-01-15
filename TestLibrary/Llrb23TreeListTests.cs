@@ -10,6 +10,7 @@ namespace TestLibrary
 {
     public class Llrb23TreeListTests
     {
+        private Random random = new Random();
         private int count_ = 100;
         private string[] testStrings_;
 
@@ -19,7 +20,7 @@ namespace TestLibrary
 
             for (int i = 0; i < this.count_; i++)
             {
-                testStrings_[i] = "Test String " + i;
+                this.testStrings_[i] = "Test String " + this.random.Next();
             }
         }
 
@@ -89,6 +90,7 @@ namespace TestLibrary
                 tree.RemoveAt(i);
             }
 
+            Assert.Throws<ArgumentOutOfRangeException>(() => tree.RemoveAt(tree.Count));
             Assert.Equal(this.count_ / 2, tree.Count);
 
             for (int i = 0; i < this.count_ / 2; i++)
@@ -107,6 +109,7 @@ namespace TestLibrary
                 tree.Remove(this.testStrings_[i]);
             }
 
+            Assert.Throws<ArgumentException>(() => tree.Remove(this.testStrings_[0]));
             Assert.Equal(this.count_ / 2, tree.Count);
 
             for (int i = 0; i < this.count_ / 2; i++)

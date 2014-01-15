@@ -7,16 +7,22 @@ namespace TestLibrary
 {
     public class Llrb23TreeTests
     {
+        private Random random = new Random();
         private int count_ = 100;
+        private SortedDictionary<int, string> dictionary = new SortedDictionary<int, string>();
+        private int[] testInts_;
         private string[] testStrings_;
 
         public Llrb23TreeTests()
         {
+            this.testInts_ = new int[this.count_];
             this.testStrings_ = new string[this.count_];
 
             for (int i = 0; i < this.count_; i++)
             {
-                testStrings_[i] = "Test String " + i;
+                this.testInts_[i] = this.random.Next();
+                this.testStrings_[i] = "Test String " + this.testInts_[i];
+                this.dictionary.Add(this.testInts_[i], this.testStrings_[i]);
             }
         }
 
@@ -29,10 +35,10 @@ namespace TestLibrary
 
             for (int i = 0; i < this.count_; i++)
             {
-                Assert.Equal(this.testStrings_[i], tree[i]);
+                Assert.Equal(this.testStrings_[i], tree[this.testInts_[i]]);
             }
 
-            Assert.Throws<ArgumentException>(() => tree.Add(0, this.testStrings_[0]));
+            Assert.Throws<ArgumentException>(() => tree.Add(this.testInts_[0], this.testStrings_[0]));
         }
 
         [Fact]
@@ -42,19 +48,19 @@ namespace TestLibrary
 
             for (int i = 0; i < this.count_; i += 2)
             {
-                tree.Remove(i);
+                tree.Remove(this.testInts_[i]);
             }
 
             Assert.Equal(this.count_ / 2, tree.Count);
 
             for (int i = 0; i < this.count_; i += 2)
             {
-                Assert.Throws<KeyNotFoundException>(() => tree[i]);
+                Assert.Throws<KeyNotFoundException>(() => tree[this.testInts_[i]]);
             }
 
             for (int i = 1; i < this.count_ / 2; i += 2)
             {
-                Assert.Equal(this.testStrings_[i], tree[i]);
+                Assert.Equal(this.testStrings_[i], tree[this.testInts_[i]]);
             }
         }
 
@@ -65,7 +71,7 @@ namespace TestLibrary
 
             for (int i = 0; i < this.count_; i++)
             {
-                Assert.Equal(true, tree.ContainsKey(i));
+                Assert.Equal(true, tree.ContainsKey(this.testInts_[i]));
             }
 
             Assert.Equal(false, tree.ContainsKey(this.count_));
@@ -82,7 +88,7 @@ namespace TestLibrary
 
             for (int i = 0; i < this.count_; i++)
             {
-                Assert.Throws<KeyNotFoundException>(() => tree[i]);
+                Assert.Throws<KeyNotFoundException>(() => tree[this.testInts_[i]]);
             }
         }
 
@@ -94,11 +100,11 @@ namespace TestLibrary
 
             for (int i = 0; i < this.count_; i++)
             {
-                Assert.Equal(true, tree.TryGetValue(i, out value));
+                Assert.Equal(true, tree.TryGetValue(this.testInts_[i], out value));
                 Assert.Equal(this.testStrings_[i], value);
             }
 
-            Assert.Equal(false, tree.TryGetValue(this.count_, out value));
+            Assert.Equal(false, tree.TryGetValue(-1, out value));
             Assert.Equal(null, value);
         }
 
@@ -106,13 +112,12 @@ namespace TestLibrary
         public void GetEnumeratorTest()
         {
             Llrb23Tree<int, string> tree = this.InitializeTree();
-            int i = 0;
+            IEnumerator<KeyValuePair<int, string>> dictionaryEnumerator = this.dictionary.GetEnumerator();
+            IEnumerator<KeyValuePair<int, string>> llrbEnumerator = tree.GetEnumerator();
 
-            foreach (KeyValuePair<int, string> value in tree)
+            while (dictionaryEnumerator.MoveNext() && llrbEnumerator.MoveNext())
             {
-                Assert.Equal(i, value.Key);
-                Assert.Equal(this.testStrings_[i], value.Value);
-                i++;
+                Assert.Equal(dictionaryEnumerator.Current, llrbEnumerator.Current);
             }
         }
 
@@ -120,11 +125,12 @@ namespace TestLibrary
         public void KeysTest()
         {
             Llrb23Tree<int, string> tree = this.InitializeTree();
-            int i = 0;
+            IEnumerator<int> dictionaryKeysEnumerator = this.dictionary.Keys.GetEnumerator();
+            IEnumerator<int> treeKeysEnumerator = tree.Keys.GetEnumerator();
 
-            foreach (int value in tree.Keys)
+            while (dictionaryKeysEnumerator.MoveNext() && treeKeysEnumerator.MoveNext())
             {
-                Assert.Equal(i++, value);
+                Assert.Equal(dictionaryKeysEnumerator.Current, treeKeysEnumerator.Current);
             }
         }
 
@@ -132,12 +138,12 @@ namespace TestLibrary
         public void ValuesTest()
         {
             Llrb23Tree<int, string> tree = this.InitializeTree();
-            int i = 0;
+            IEnumerator<string> dictionaryKeysEnumerator = this.dictionary.Values.GetEnumerator();
+            IEnumerator<string> treeKeysEnumerator = tree.Values.GetEnumerator();
 
-            foreach (string value in tree.Values)
+            while (dictionaryKeysEnumerator.MoveNext() && treeKeysEnumerator.MoveNext())
             {
-                Assert.Equal(this.testStrings_[i], value);
-                i++;
+                Assert.Equal(dictionaryKeysEnumerator.Current, treeKeysEnumerator.Current);
             }
         }
 
@@ -149,8 +155,8 @@ namespace TestLibrary
 
             for (int i = 0; i < this.count_; i++)
             {
-                tree[i] = changed;
-                Assert.Equal(changed, tree[i]);
+                tree[this.testInts_[i]] = changed;
+                Assert.Equal(changed, tree[this.testInts_[i]]);
             }
         }
 
@@ -160,7 +166,7 @@ namespace TestLibrary
 
             for (int i = 0; i < this.count_; i++)
             {
-                tree.Add(i, this.testStrings_[i]);
+                tree.Add(this.testInts_[i], this.testStrings_[i]);
             }
 
             return tree;
