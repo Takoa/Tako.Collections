@@ -7,16 +7,15 @@ namespace Tako.Collections.Generic
         private class Element : IEnumerable<Element>
         {
             public bool IsRed;
-            public T Value;
+            public T Item;
             public Element Left;
             public Element Right;
-            public int TreeSize;
+            public int TreeSize = 1;
 
-            public Element(T value)
+            public Element(T item)
             {
                 this.IsRed = true;
-                this.Value = value;
-                this.TreeSize = 1;
+                this.Item = item;
             }
 
             public static bool IsNotNilAndRed(Element element)

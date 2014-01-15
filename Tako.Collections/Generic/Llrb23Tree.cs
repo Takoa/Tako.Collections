@@ -234,7 +234,7 @@ namespace Tako.Collections.Generic
 
             if (order == 0)
             {
-                throw new ArgumentException("The key already exist.", "key");
+                throw new ArgumentException("The key already exists.", "key");
             }
             else if (order < 0)
             {

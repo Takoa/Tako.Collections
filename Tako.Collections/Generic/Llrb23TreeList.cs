@@ -5,14 +5,22 @@ namespace Tako.Collections.Generic
 {
     public partial class Llrb23TreeList<T> : IList<T>
     {
-        private Element root;
-        private EqualityComparer<T> equalityComparer = EqualityComparer<T>.Default;
+        private Element root_;
+        private EqualityComparer<T> equalityComparer_ = EqualityComparer<T>.Default;
 
         public int Count
         {
             get
             {
-                return this.root != null ? this.root.TreeSize : 0;
+                return this.root_ != null ? this.root_.TreeSize : 0;
+            }
+        }
+
+        public bool IsReadOnly
+        {
+            get
+            {
+                return false;
             }
         }
 
@@ -25,7 +33,7 @@ namespace Tako.Collections.Generic
                     throw new ArgumentOutOfRangeException();
                 }
 
-                return this.FindElement(this.root, index).Value;
+                return this.FindElement(this.root_, index).Item;
             }
             set
             {
@@ -34,15 +42,7 @@ namespace Tako.Collections.Generic
                     throw new ArgumentOutOfRangeException("index");
                 }
 
-                this.FindElement(this.root, index).Value = value;
-            }
-        }
-
-        public bool IsReadOnly
-        {
-            get
-            {
-                return false;
+                this.FindElement(this.root_, index).Item = value;
             }
         }
 
@@ -52,8 +52,8 @@ namespace Tako.Collections.Generic
 
         public void Add(T item)
         {
-            this.Insert(ref this.root, this.Count, item);
-            root.IsRed = false;
+            this.Insert(ref this.root_, this.Count, item);
+            root_.IsRed = false;
         }
 
         public void Insert(int index, T item)
@@ -63,19 +63,19 @@ namespace Tako.Collections.Generic
                 throw new ArgumentOutOfRangeException("index");
             }
 
-            this.Insert(ref this.root, index, item);
-            root.IsRed = false;
+            this.Insert(ref this.root_, index, item);
+            root_.IsRed = false;
         }
 
         public bool Contains(T item)
         {
-            if (this.root != null)
+            if (this.root_ != null)
             {
                 if (item == null)
                 {
-                    foreach (Element element in this.root)
+                    foreach (Element element in this.root_)
                     {
-                        if (element.Value == null)
+                        if (element.Item == null)
                         {
                             return true;
                         }
@@ -83,9 +83,9 @@ namespace Tako.Collections.Generic
                 }
                 else
                 {
-                    foreach (Element element in this.root)
+                    foreach (Element element in this.root_)
                     {
-                        if (this.equalityComparer.Equals(item, element.Value))
+                        if (this.equalityComparer_.Equals(item, element.Item))
                         {
                             return true;
                         }
@@ -100,13 +100,13 @@ namespace Tako.Collections.Generic
         {
             int index = 0;
 
-            if (this.root != null)
+            if (this.root_ != null)
             {
                 if (item == null)
                 {
-                    foreach (Element element in this.root)
+                    foreach (Element element in this.root_)
                     {
-                        if (element.Value == null)
+                        if (element.Item == null)
                         {
                             return index;
                         }
@@ -116,9 +116,9 @@ namespace Tako.Collections.Generic
                 }
                 else
                 {
-                    foreach (Element element in this.root)
+                    foreach (Element element in this.root_)
                     {
-                        if (this.equalityComparer.Equals(item, element.Value))
+                        if (this.equalityComparer_.Equals(item, element.Item))
                         {
                             return index;
                         }
@@ -133,7 +133,7 @@ namespace Tako.Collections.Generic
 
         public void Clear()
         {
-            this.root = null;
+            this.root_ = null;
         }
 
         public void RemoveAt(int index)
@@ -143,12 +143,21 @@ namespace Tako.Collections.Generic
                 throw new ArgumentOutOfRangeException("index");
             }
 
-            this.RemoveAt(ref this.root, index);
+            this.RemoveAt(ref this.root_, index);
         }
 
         public bool Remove(T item)
         {
-            return this.RemoveAt(ref this.root, this.IndexOf(item));
+            int index = this.IndexOf(item);
+
+            if (0 <= index)
+            {
+                return this.RemoveAt(ref this.root_, index);
+            }
+            else
+            {
+                throw new ArgumentException("No such item.");
+            }
         }
 
         public void CopyTo(T[] array, int index)
@@ -168,19 +177,19 @@ namespace Tako.Collections.Generic
                 throw new ArgumentException();
             }
 
-            foreach (Element element in this.root)
+            foreach (Element element in this.root_)
             {
-                array[index++] = element.Value;
+                array[index++] = element.Item;
             }
         }
 
         public IEnumerator<T> GetEnumerator()
         {
-            if (this.root != null)
+            if (this.root_ != null)
             {
-                foreach (Element element in this.root)
+                foreach (Element element in this.root_)
                 {
-                    yield return element.Value;
+                    yield return element.Item;
                 }
             }
         }
@@ -211,7 +220,7 @@ namespace Tako.Collections.Generic
                 }
             }
 
-            return element;
+            return null;
         }
 
         private void Insert(ref Element to, int index, T item)
@@ -260,12 +269,22 @@ namespace Tako.Collections.Generic
 
             if (index < (from.Left != null ? from.Left.TreeSize : 0))
             {
-                if (Element.IsNilOrBlack(from.Left) && Element.IsNilOrBlack(from.Left.Left))
-                {
-                    Element.MoveRedLeft(ref from);  // Push red right if necessary.
-                }
+                // Removing will never fail if the index is always in range of the tree.
+                // No false-returning processes are needed.
+                //
+                //if (from.Left != null)
+                //{
+                    if (Element.IsNilOrBlack(from.Left) && Element.IsNilOrBlack(from.Left.Left))
+                    {
+                        Element.MoveRedLeft(ref from);  // Push red right if necessary.
+                    }
 
-                succeeded = this.RemoveAt(ref from.Left, index);  // Move down (left).
+                    succeeded = this.RemoveAt(ref from.Left, index);  // Move down (left).
+                //}
+                //else
+                //{
+                //    return false;
+                //}
             }
             else
             {
@@ -283,6 +302,20 @@ namespace Tako.Collections.Generic
                     return true;
                 }
 
+                //if (from.Right == null)
+                //{
+                //    if (index == (from.Left != null ? from.Left.TreeSize : 0))
+                //    {
+                //        from = null;  // Delete node.
+
+                //        return true;
+                //    }
+                //    else
+                //    {
+                //        return false;
+                //    }
+                //}
+
                 if (Element.IsNilOrBlack(from.Right) && Element.IsNilOrBlack(from.Right.Left))
                 {
                     Element.MoveRedRight(ref from);  // Push red right if necessary.
@@ -292,7 +325,7 @@ namespace Tako.Collections.Generic
 
                 if (index == leftTreeSize)
                 {
-                    from.Value = from.Right.GetMin().Value;  // Replace current node with successor key, value.
+                    from.Item = from.Right.GetMin().Item;  // Replace current node with successor key, value.
                     Element.RemoveMin(ref from.Right);  // Delete successor.
                     succeeded = true;
                 }
