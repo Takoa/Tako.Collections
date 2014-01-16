@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Tako.Collections.Generic
 {
-    public partial class Llrb23TreeList<T> : IList<T>
+    public partial class SortedLlrb23TreeList<T> : IList<T>
     {
         private Element root_;
-        private EqualityComparer<T> equalityComparer_ = EqualityComparer<T>.Default;
+        private IComparer<T> comparer_;
 
         public int Count
         {
@@ -33,98 +36,56 @@ namespace Tako.Collections.Generic
                     throw new ArgumentOutOfRangeException();
                 }
 
-                return this.FindElement(this.root_, index).Item;
+                return this.FindElementByIndex(this.root_, index).Item;
             }
             set
             {
-                if (index < 0 || this.Count <= index)
-                {
-                    throw new ArgumentOutOfRangeException("index");
-                }
-
-                this.FindElement(this.root_, index).Item = value;
+                throw new NotSupportedException();
             }
         }
 
-        public Llrb23TreeList()
+        public SortedLlrb23TreeList()
         {
+            this.comparer_ = Comparer<T>.Default;
+        }
+
+        public SortedLlrb23TreeList(IComparer<T> comparer)
+        {
+            this.comparer_ = comparer;
         }
 
         public void Add(T item)
         {
-            this.Insert(ref this.root_, this.Count, item);
-            root_.IsRed = false;
-        }
-
-        public void Insert(int index, T item)
-        {
-            if (index < 0 || this.Count <= index)
-            {
-                throw new ArgumentOutOfRangeException("index");
-            }
-
-            this.Insert(ref this.root_, index, item);
+            this.Add(ref this.root_, item);
             root_.IsRed = false;
         }
 
         public bool Contains(T item)
         {
-            if (this.root_ != null)
-            {
-                if (item == null)
-                {
-                    foreach (Element element in this.root_)
-                    {
-                        if (element.Item == null)
-                        {
-                            return true;
-                        }
-                    }
-                }
-                else
-                {
-                    foreach (Element element in this.root_)
-                    {
-                        if (this.equalityComparer_.Equals(item, element.Item))
-                        {
-                            return true;
-                        }
-                    }
-                }
-            }
-
-            return false;
+            return this.FindElementByItem(this.root_, item) != null;
         }
 
         public int IndexOf(T item)
         {
+            Element element = this.root_;
             int index = 0;
 
-            if (this.root_ != null)
+            while (element != null)
             {
-                if (item == null)
-                {
-                    foreach (Element element in this.root_)
-                    {
-                        if (element.Item == null)
-                        {
-                            return index;
-                        }
+                int order = this.comparer_.Compare(item, element.Item);
 
-                        index++;
-                    }
+                if (order == 0)
+                {
+                    return index += (element.Left != null ? element.Left.TreeSize : 0);
+                }
+                else if (order < 0)
+                {
+                    element = element.Left;
                 }
                 else
                 {
-                    foreach (Element element in this.root_)
-                    {
-                        if (this.equalityComparer_.Equals(item, element.Item))
-                        {
-                            return index;
-                        }
-
-                        index++;
-                    }
+                    index += 1 + (element.Left != null ? element.Left.TreeSize : 0);
+                    element = element.Right;
                 }
             }
 
@@ -194,12 +155,17 @@ namespace Tako.Collections.Generic
             }
         }
 
+        void IList<T>.Insert(int index, T item)
+        {
+            throw new NotSupportedException();
+        }
+
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
         }
 
-        private Element FindElement(Element element, int index)
+        private Element FindElementByIndex(Element element, int index)
         {
             while (element != null)
             {
@@ -223,26 +189,49 @@ namespace Tako.Collections.Generic
             return null;
         }
 
-        private void Insert(ref Element to, int index, T item)
+        private Element FindElementByItem(Element element, T item)
         {
-            int leftTreeSize;
+            while (element != null)
+            {
+                int order = this.comparer_.Compare(item, element.Item);
+
+                if (order == 0)
+                {
+                    return element;
+                }
+                else
+                {
+                    element = order < 0 ? element.Left : element.Right;
+                }
+            }
+
+            return null;
+        }
+
+        private void Add(ref Element to, T item)
+        {
+            int order;
 
             if (to == null)
             {
-                to = new Element(item);
+                to = new Element(item);  // Insert at the bottom.
 
                 return;
             }
 
-            leftTreeSize = to.Left != null ? to.Left.TreeSize : 0;
+            order = this.comparer_.Compare(item, to.Item);
 
-            if (index <= leftTreeSize)
+            if (order == 0)
             {
-                this.Insert(ref to.Left, index, item);
+                throw new ArgumentException("The item already exists.", "key");
+            }
+            else if (order < 0)
+            {
+                this.Add(ref to.Left, item);
             }
             else
             {
-                this.Insert(ref to.Right, index - (leftTreeSize + 1), item);
+                this.Add(ref to.Right, item);
             }
 
             to.TreeSize++;
@@ -259,7 +248,7 @@ namespace Tako.Collections.Generic
 
             if (Element.IsNotNilAndRed(to.Left) && Element.IsNotNilAndRed(to.Right))
             {
-                to.FlipColor();  // Split 4-elements on the way up.
+                to.FlipColor();  // Split 4-nodes on the way up.
             }
         }
 
@@ -297,7 +286,7 @@ namespace Tako.Collections.Generic
                 if (from.Right == null && index == (from.Left != null ? from.Left.TreeSize : 0))
                 {
                     from = null;  // Delete node.
-
+ 
                     return true;
                 }
 

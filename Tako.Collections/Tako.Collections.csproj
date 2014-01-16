@@ -45,6 +45,8 @@
     <Compile Include="Generic\Llrb23Tree.ValueCollection.cs" />
     <Compile Include="Generic\Llrb23TreeList.cs" />
     <Compile Include="Generic\Llrb23TreeList.Element.cs" />
+    <Compile Include="Generic\SortedLlrb23TreeList.cs" />
+    <Compile Include="Generic\SortedLlrb23TreeList.Element.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

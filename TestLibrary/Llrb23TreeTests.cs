@@ -115,8 +115,10 @@ namespace TestLibrary
             IEnumerator<KeyValuePair<int, string>> dictionaryEnumerator = this.dictionary.GetEnumerator();
             IEnumerator<KeyValuePair<int, string>> llrbEnumerator = tree.GetEnumerator();
 
-            while (dictionaryEnumerator.MoveNext() && llrbEnumerator.MoveNext())
+            while (dictionaryEnumerator.MoveNext())
             {
+                llrbEnumerator.MoveNext();
+
                 Assert.Equal(dictionaryEnumerator.Current, llrbEnumerator.Current);
             }
         }
