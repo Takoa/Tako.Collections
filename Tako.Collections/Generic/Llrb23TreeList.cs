@@ -5,14 +5,14 @@ namespace Tako.Collections.Generic
 {
     public partial class Llrb23TreeList<T> : IList<T>
     {
-        private Element root_;
-        private EqualityComparer<T> equalityComparer_ = EqualityComparer<T>.Default;
+        private Element root;
+        private EqualityComparer<T> equalityComparer = EqualityComparer<T>.Default;
 
         public int Count
         {
             get
             {
-                return this.root_ != null ? this.root_.TreeSize : 0;
+                return this.root != null ? this.root.TreeSize : 0;
             }
         }
 
@@ -33,7 +33,7 @@ namespace Tako.Collections.Generic
                     throw new ArgumentOutOfRangeException();
                 }
 
-                return this.FindElement(this.root_, index).Item;
+                return this.FindElement(this.root, index).Item;
             }
             set
             {
@@ -42,7 +42,7 @@ namespace Tako.Collections.Generic
                     throw new ArgumentOutOfRangeException("index");
                 }
 
-                this.FindElement(this.root_, index).Item = value;
+                this.FindElement(this.root, index).Item = value;
             }
         }
 
@@ -52,8 +52,8 @@ namespace Tako.Collections.Generic
 
         public void Add(T item)
         {
-            this.Insert(ref this.root_, this.Count, item);
-            root_.IsRed = false;
+            this.Insert(ref this.root, this.Count, item);
+            root.IsRed = false;
         }
 
         public void Insert(int index, T item)
@@ -63,17 +63,17 @@ namespace Tako.Collections.Generic
                 throw new ArgumentOutOfRangeException("index");
             }
 
-            this.Insert(ref this.root_, index, item);
-            root_.IsRed = false;
+            this.Insert(ref this.root, index, item);
+            root.IsRed = false;
         }
 
         public bool Contains(T item)
         {
-            if (this.root_ != null)
+            if (this.root != null)
             {
                 if (item == null)
                 {
-                    foreach (Element element in this.root_)
+                    foreach (Element element in this.root)
                     {
                         if (element.Item == null)
                         {
@@ -83,9 +83,9 @@ namespace Tako.Collections.Generic
                 }
                 else
                 {
-                    foreach (Element element in this.root_)
+                    foreach (Element element in this.root)
                     {
-                        if (this.equalityComparer_.Equals(item, element.Item))
+                        if (this.equalityComparer.Equals(item, element.Item))
                         {
                             return true;
                         }
@@ -100,11 +100,11 @@ namespace Tako.Collections.Generic
         {
             int index = 0;
 
-            if (this.root_ != null)
+            if (this.root != null)
             {
                 if (item == null)
                 {
-                    foreach (Element element in this.root_)
+                    foreach (Element element in this.root)
                     {
                         if (element.Item == null)
                         {
@@ -116,9 +116,9 @@ namespace Tako.Collections.Generic
                 }
                 else
                 {
-                    foreach (Element element in this.root_)
+                    foreach (Element element in this.root)
                     {
-                        if (this.equalityComparer_.Equals(item, element.Item))
+                        if (this.equalityComparer.Equals(item, element.Item))
                         {
                             return index;
                         }
@@ -133,7 +133,7 @@ namespace Tako.Collections.Generic
 
         public void Clear()
         {
-            this.root_ = null;
+            this.root = null;
         }
 
         public void RemoveAt(int index)
@@ -143,7 +143,7 @@ namespace Tako.Collections.Generic
                 throw new ArgumentOutOfRangeException("index");
             }
 
-            this.RemoveAt(ref this.root_, index);
+            this.RemoveAt(ref this.root, index);
         }
 
         public bool Remove(T item)
@@ -152,7 +152,7 @@ namespace Tako.Collections.Generic
 
             if (0 <= index)
             {
-                return this.RemoveAt(ref this.root_, index);
+                return this.RemoveAt(ref this.root, index);
             }
             else
             {
@@ -177,7 +177,7 @@ namespace Tako.Collections.Generic
                 throw new ArgumentException();
             }
 
-            foreach (Element element in this.root_)
+            foreach (Element element in this.root)
             {
                 array[index++] = element.Item;
             }
@@ -185,9 +185,9 @@ namespace Tako.Collections.Generic
 
         public IEnumerator<T> GetEnumerator()
         {
-            if (this.root_ != null)
+            if (this.root != null)
             {
-                foreach (Element element in this.root_)
+                foreach (Element element in this.root)
                 {
                     yield return element.Item;
                 }

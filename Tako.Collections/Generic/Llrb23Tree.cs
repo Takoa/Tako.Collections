@@ -7,7 +7,7 @@ namespace Tako.Collections.Generic
     [DebuggerDisplay("Count = {Count}")]
     public partial class Llrb23Tree<TKey, TValue> : IDictionary<TKey, TValue>
     {
-        private Node root_;
+        private Node root;
 
         public int Count { get; private set; }
         public IComparer<TKey> Comparer { get; private set; }
@@ -37,7 +37,7 @@ namespace Tako.Collections.Generic
                     throw new ArgumentNullException("key");
                 }
 
-                Node node = this.FindNode(this.root_, key);
+                Node node = this.FindNode(this.root, key);
 
                 if (node != null)
                 {
@@ -50,7 +50,7 @@ namespace Tako.Collections.Generic
             }
             set
             {
-                Node node = this.FindNode(this.root_, key);
+                Node node = this.FindNode(this.root, key);
 
                 if (node != null)
                 {
@@ -72,8 +72,8 @@ namespace Tako.Collections.Generic
         }
 
         public Llrb23Tree()
+            : this(null)
         {
-            this.Comparer = Comparer<TKey>.Default;
         }
 
         public Llrb23Tree(IComparer<TKey> comparer)
@@ -95,14 +95,14 @@ namespace Tako.Collections.Generic
                 throw new ArgumentNullException("key");
             }
 
-            this.Add(ref this.root_, key, value);
-            root_.IsRed = false;
+            this.Add(ref this.root, key, value);
+            root.IsRed = false;
             this.Count++;
         }
 
         public bool Remove(TKey key)
         {
-            bool result = this.Remove(ref this.root_, key);
+            bool result = this.Remove(ref this.root, key);
 
             if (result)
             {
@@ -119,18 +119,18 @@ namespace Tako.Collections.Generic
                 throw new ArgumentNullException("key");
             }
 
-            return this.FindNode(this.root_, key) != null;
+            return this.FindNode(this.root, key) != null;
         }
 
         public void Clear()
         {
-            this.root_ = null;
+            this.root = null;
             this.Count = 0;
         }
 
         public bool TryGetValue(TKey key, out TValue value)
         {
-            Node node = this.FindNode(this.root_, key);
+            Node node = this.FindNode(this.root, key);
 
             if (node != null)
             {
@@ -148,9 +148,9 @@ namespace Tako.Collections.Generic
 
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
         {
-            if (this.root_ != null)
+            if (this.root != null)
             {
-                foreach (Node node in this.root_)
+                foreach (Node node in this.root)
                 {
                     yield return new KeyValuePair<TKey, TValue>(node.Key, node.Value);
                 }
@@ -184,7 +184,7 @@ namespace Tako.Collections.Generic
                 throw new ArgumentException();
             }
 
-            foreach (Node node in this.root_)
+            foreach (Node node in this.root)
             {
                 array[index++] = new KeyValuePair<TKey,TValue>(node.Key, node.Value);
             }

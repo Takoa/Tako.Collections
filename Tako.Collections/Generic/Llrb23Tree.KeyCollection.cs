@@ -7,13 +7,13 @@ namespace Tako.Collections.Generic
     {
         public class KeyCollection : ICollection<TKey>
         {
-            private Llrb23Tree<TKey, TValue> llrb_;
+            private Llrb23Tree<TKey, TValue> llrb;
 
             public int Count
             {
                 get
                 {
-                    return this.llrb_.Count;
+                    return this.llrb.Count;
                 }
             }
 
@@ -27,7 +27,7 @@ namespace Tako.Collections.Generic
 
             public KeyCollection(Llrb23Tree<TKey, TValue> llrb)
             {
-                this.llrb_ = llrb;
+                this.llrb = llrb;
             }
 
             public void CopyTo(TKey[] array, int index)
@@ -47,11 +47,11 @@ namespace Tako.Collections.Generic
                     throw new ArgumentException();
                 }
 
-                if (this.llrb_.root_ != null)
+                if (this.llrb.root != null)
                 {
                     int i = index;
 
-                    foreach (Node node in this.llrb_.root_)
+                    foreach (Node node in this.llrb.root)
                     {
                         array[i++] = node.Key;
                     }
@@ -60,9 +60,9 @@ namespace Tako.Collections.Generic
 
             public IEnumerator<TKey> GetEnumerator()
             {
-                if (this.llrb_.root_ != null)
+                if (this.llrb.root != null)
                 {
-                    foreach (Node node in this.llrb_.root_)
+                    foreach (Node node in this.llrb.root)
                     {
                         yield return node.Key;
                     }
@@ -81,7 +81,7 @@ namespace Tako.Collections.Generic
 
             bool ICollection<TKey>.Contains(TKey key)
             {
-                return this.llrb_.ContainsKey(key);
+                return this.llrb.ContainsKey(key);
             }
 
             bool ICollection<TKey>.Remove(TKey key)

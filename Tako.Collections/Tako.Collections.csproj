@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Generic\MinHeap.cs" />
     <Compile Include="Generic\Llrb23Tree.cs" />
     <Compile Include="Generic\Llrb23Tree.KeyCollection.cs" />
     <Compile Include="Generic\Llrb23Tree.Node.cs" />

@@ -1,21 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Tako.Collections.Generic
 {
     public partial class SortedLlrb23TreeList<T> : IList<T>
     {
-        private Element root_;
-        private IComparer<T> comparer_;
+        private Element root;
+
+        public IComparer<T> Comparer { get; private set; }
 
         public int Count
         {
             get
             {
-                return this.root_ != null ? this.root_.TreeSize : 0;
+                return this.root != null ? this.root.TreeSize : 0;
             }
         }
 
@@ -36,7 +34,7 @@ namespace Tako.Collections.Generic
                     throw new ArgumentOutOfRangeException();
                 }
 
-                return this.FindElementByIndex(this.root_, index).Item;
+                return this.FindElementByIndex(this.root, index).Item;
             }
             set
             {
@@ -45,34 +43,41 @@ namespace Tako.Collections.Generic
         }
 
         public SortedLlrb23TreeList()
+            : this(null)
         {
-            this.comparer_ = Comparer<T>.Default;
         }
 
         public SortedLlrb23TreeList(IComparer<T> comparer)
         {
-            this.comparer_ = comparer;
+            if (comparer == null)
+            {
+                this.Comparer = Comparer<T>.Default;
+            }
+            else
+            {
+                this.Comparer = comparer;
+            }
         }
 
         public void Add(T item)
         {
-            this.Add(ref this.root_, item);
-            root_.IsRed = false;
+            this.Add(ref this.root, item);
+            root.IsRed = false;
         }
 
         public bool Contains(T item)
         {
-            return this.FindElementByItem(this.root_, item) != null;
+            return this.FindElementByItem(this.root, item) != null;
         }
 
         public int IndexOf(T item)
         {
-            Element element = this.root_;
+            Element element = this.root;
             int index = 0;
 
             while (element != null)
             {
-                int order = this.comparer_.Compare(item, element.Item);
+                int order = this.Comparer.Compare(item, element.Item);
 
                 if (order == 0)
                 {
@@ -94,7 +99,7 @@ namespace Tako.Collections.Generic
 
         public void Clear()
         {
-            this.root_ = null;
+            this.root = null;
         }
 
         public void RemoveAt(int index)
@@ -104,7 +109,7 @@ namespace Tako.Collections.Generic
                 throw new ArgumentOutOfRangeException("index");
             }
 
-            this.RemoveAt(ref this.root_, index);
+            this.RemoveAt(ref this.root, index);
         }
 
         public bool Remove(T item)
@@ -113,7 +118,7 @@ namespace Tako.Collections.Generic
 
             if (0 <= index)
             {
-                return this.RemoveAt(ref this.root_, index);
+                return this.RemoveAt(ref this.root, index);
             }
             else
             {
@@ -138,7 +143,7 @@ namespace Tako.Collections.Generic
                 throw new ArgumentException();
             }
 
-            foreach (Element element in this.root_)
+            foreach (Element element in this.root)
             {
                 array[index++] = element.Item;
             }
@@ -146,9 +151,9 @@ namespace Tako.Collections.Generic
 
         public IEnumerator<T> GetEnumerator()
         {
-            if (this.root_ != null)
+            if (this.root != null)
             {
-                foreach (Element element in this.root_)
+                foreach (Element element in this.root)
                 {
                     yield return element.Item;
                 }
@@ -193,7 +198,7 @@ namespace Tako.Collections.Generic
         {
             while (element != null)
             {
-                int order = this.comparer_.Compare(item, element.Item);
+                int order = this.Comparer.Compare(item, element.Item);
 
                 if (order == 0)
                 {
@@ -219,7 +224,7 @@ namespace Tako.Collections.Generic
                 return;
             }
 
-            order = this.comparer_.Compare(item, to.Item);
+            order = this.Comparer.Compare(item, to.Item);
 
             if (order == 0)
             {

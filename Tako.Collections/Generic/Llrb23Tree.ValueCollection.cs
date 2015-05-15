@@ -7,14 +7,14 @@ namespace Tako.Collections.Generic
     {
         public class ValueCollection : ICollection<TValue>
         {
-            private Llrb23Tree<TKey, TValue> llrb_;
-            private IEqualityComparer<TValue> equalityComparer_;
+            private Llrb23Tree<TKey, TValue> llrb;
+            private IEqualityComparer<TValue> equalityComparer;
 
             public int Count
             {
                 get
                 {
-                    return this.llrb_.Count;
+                    return this.llrb.Count;
                 }
             }
 
@@ -28,8 +28,8 @@ namespace Tako.Collections.Generic
 
             public ValueCollection(Llrb23Tree<TKey, TValue> llrb)
             {
-                this.llrb_ = llrb;
-                this.equalityComparer_ = EqualityComparer<TValue>.Default;
+                this.llrb = llrb;
+                this.equalityComparer = EqualityComparer<TValue>.Default;
             }
 
             public void CopyTo(TValue[] array, int index)
@@ -49,11 +49,11 @@ namespace Tako.Collections.Generic
                     throw new ArgumentException();
                 }
 
-                if (this.llrb_.root_ != null)
+                if (this.llrb.root != null)
                 {
                     int i = index;
 
-                    foreach (Node node in this.llrb_.root_)
+                    foreach (Node node in this.llrb.root)
                     {
                         array[i++] = node.Value;
                     }
@@ -62,9 +62,9 @@ namespace Tako.Collections.Generic
 
             public IEnumerator<TValue> GetEnumerator()
             {
-                if (this.llrb_.root_ != null)
+                if (this.llrb.root != null)
                 {
-                    foreach (Node node in this.llrb_.root_)
+                    foreach (Node node in this.llrb.root)
                     {
                         yield return node.Value;
                     }
@@ -83,11 +83,11 @@ namespace Tako.Collections.Generic
 
             bool ICollection<TValue>.Contains(TValue value)
             {
-                if (this.llrb_.root_ != null)
+                if (this.llrb.root != null)
                 {
                     if (value == null)
                     {
-                        foreach (Node node in this.llrb_.root_)
+                        foreach (Node node in this.llrb.root)
                         {
                             if (node.Value == null)
                             {
@@ -97,9 +97,9 @@ namespace Tako.Collections.Generic
                     }
                     else
                     {
-                        foreach (Node node in this.llrb_.root_)
+                        foreach (Node node in this.llrb.root)
                         {
-                            if (this.equalityComparer_.Equals(value, node.Value))
+                            if (this.equalityComparer.Equals(value, node.Value))
                             {
                                 return true;
                             }
