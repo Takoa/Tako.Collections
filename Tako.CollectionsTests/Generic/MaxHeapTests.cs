@@ -4,13 +4,13 @@ using Xunit;
 
 namespace Tako.Collections.Generic.Tests
 {
-    public class MinHeapTests
+    public class MaxHeapTests
     {
         private int count = 100;
         private readonly int[] testInts;
         private Random random = new Random();
 
-        public MinHeapTests()
+        public MaxHeapTests()
         {
             this.testInts = new int[this.count];
 
@@ -21,18 +21,40 @@ namespace Tako.Collections.Generic.Tests
         }
 
         [Fact()]
-        public void MinHeapTest()
+        public void MaxHeapTest()
         {
-            MinHeap<int> heap = new MinHeap<int>();
+            MaxHeap<int> heap = new MaxHeap<int>();
 
             Assert.True(heap.Count == 0);
             Assert.Throws<IndexOutOfRangeException>(() => heap[0]);
         }
 
         [Fact()]
-        public void MinHeapTest1()
+        public void MaxHeapTest1()
         {
-            MinHeap<int> heap = new MinHeap<int>(new TestComparer());
+            MaxHeap<int> heap = new MaxHeap<int>(new TestComparer());
+
+            for (int i = 0; i < heap.Count / 2; i++)
+            {
+                int left = heap.GetLeft(i);
+                int right = heap.GetRight(i);
+
+                if (left != 0)
+                {
+                    Assert.True(heap[i] < left);
+                }
+
+                if (right != 0)
+                {
+                    Assert.True(heap[i] < right);
+                }
+            }
+        }
+
+        [Fact()]
+        public void MaxHeapTest2()
+        {
+            MaxHeap<int> heap = new MaxHeap<int>(this.testInts, true);
 
             for (int i = 0; i < heap.Count / 2; i++)
             {
@@ -52,9 +74,9 @@ namespace Tako.Collections.Generic.Tests
         }
 
         [Fact()]
-        public void MinHeapTest2()
+        public void MaxHeapTest3()
         {
-            MinHeap<int> heap = new MinHeap<int>(this.testInts, true);
+            MaxHeap<int> heap = new MaxHeap<int>(this.testInts, 50, true, null);
 
             for (int i = 0; i < heap.Count / 2; i++)
             {
@@ -63,34 +85,12 @@ namespace Tako.Collections.Generic.Tests
 
                 if (left != 0)
                 {
-                    Assert.True(heap[i] < left);
+                    Assert.True(left < heap[i]);
                 }
 
                 if (right != 0)
                 {
-                    Assert.True(heap[i] < right);
-                }
-            }
-        }
-
-        [Fact()]
-        public void MinHeapTest3()
-        {
-            MinHeap<int> heap = new MinHeap<int>(this.testInts, 50, true, null);
-
-            for (int i = 0; i < heap.Count / 2; i++)
-            {
-                int left = heap.GetLeft(i);
-                int right = heap.GetRight(i);
-
-                if (left != 0)
-                {
-                    Assert.True(heap[i] < left);
-                }
-
-                if (right != 0)
-                {
-                    Assert.True(heap[i] < right);
+                    Assert.True(right < heap[i]);
                 }
             }
         }
@@ -98,7 +98,7 @@ namespace Tako.Collections.Generic.Tests
         [Fact()]
         public void GetTest()
         {
-            MinHeap<int> heap = new MinHeap<int>(this.testInts, true);
+            MaxHeap<int> heap = new MaxHeap<int>(this.testInts, true);
 
             Assert.Throws<IndexOutOfRangeException>(() => heap[-1]);
             Assert.Throws<IndexOutOfRangeException>(() => heap[this.count]);
@@ -107,7 +107,7 @@ namespace Tako.Collections.Generic.Tests
         [Fact()]
         public void LeftParent()
         {
-            MinHeap<int> heap = new MinHeap<int>(this.testInts, true);
+            MaxHeap<int> heap = new MaxHeap<int>(this.testInts, true);
 
             Assert.Throws<IndexOutOfRangeException>(() => heap.GetParent(-1));
             Assert.Throws<IndexOutOfRangeException>(() => heap.GetParent(this.count));
@@ -116,7 +116,7 @@ namespace Tako.Collections.Generic.Tests
         [Fact()]
         public void LeftTest()
         {
-            MinHeap<int> heap = new MinHeap<int>(this.testInts, true);
+            MaxHeap<int> heap = new MaxHeap<int>(this.testInts, true);
 
             Assert.Throws<IndexOutOfRangeException>(() => heap.GetLeft(-1));
             Assert.Throws<IndexOutOfRangeException>(() => heap.GetLeft(this.count));
@@ -125,7 +125,7 @@ namespace Tako.Collections.Generic.Tests
         [Fact()]
         public void RightTest()
         {
-            MinHeap<int> heap = new MinHeap<int>(this.testInts, true);
+            MaxHeap<int> heap = new MaxHeap<int>(this.testInts, true);
 
             Assert.Throws<IndexOutOfRangeException>(() => heap.GetRight(-1));
             Assert.Throws<IndexOutOfRangeException>(() => heap.GetRight(this.count));
@@ -134,7 +134,7 @@ namespace Tako.Collections.Generic.Tests
         [Fact()]
         public void InsertTest()
         {
-            MinHeap<int> heap = new MinHeap<int>(this.testInts, true);
+            MaxHeap<int> heap = new MaxHeap<int>(this.testInts, true);
 
             for (int i = 0; i < this.count; i++)
             {
@@ -148,12 +148,12 @@ namespace Tako.Collections.Generic.Tests
 
                 if (left != 0)
                 {
-                    Assert.True(heap[i] < left);
+                    Assert.True(left < heap[i]);
                 }
 
                 if (right != 0)
                 {
-                    Assert.True(heap[i] < right);
+                    Assert.True(right < heap[i]);
                 }
             }
         }
@@ -161,13 +161,13 @@ namespace Tako.Collections.Generic.Tests
         [Fact()]
         public void ExtractRootTest()
         {
-            MinHeap<int> heap = new MinHeap<int>(this.testInts, true);
+            MaxHeap<int> heap = new MaxHeap<int>(this.testInts, true);
             int[] sortedInts = new int[this.count];
 
             this.testInts.CopyTo(sortedInts, 0);
             Array.Sort(sortedInts);
 
-            for (int i = 0; i < this.count; i++)
+            for (int i = this.count - 1; 0 <= i; i--)
             {
                 Assert.True(sortedInts[i] == heap.ExtractRoot());
             }
@@ -178,7 +178,7 @@ namespace Tako.Collections.Generic.Tests
         [Fact()]
         public void ClearTest()
         {
-            MinHeap<int> heap = new MinHeap<int>(this.testInts, true);
+            MaxHeap<int> heap = new MaxHeap<int>(this.testInts, true);
 
             ((ICollection<int>)heap).Clear();
 
@@ -189,7 +189,7 @@ namespace Tako.Collections.Generic.Tests
         [Fact()]
         public void ContainsTest()
         {
-            ICollection<int> heap = new MinHeap<int>(this.testInts, true);
+            ICollection<int> heap = new MaxHeap<int>(this.testInts, true);
 
             for (int i = this.count - 1; 0 <= i; i--)
             {
@@ -202,14 +202,14 @@ namespace Tako.Collections.Generic.Tests
         [Fact()]
         public void CopyToTest()
         {
-            ICollection<int> heap = new MinHeap<int>(this.testInts, true);
+            ICollection<int> heap = new MaxHeap<int>(this.testInts, true);
             int[] copy = new int[this.count];
 
             heap.CopyTo(copy, 0);
 
             for (int i = 0; i < this.count; i++)
             {
-                Assert.True(copy[i] == ((MinHeap<int>)heap)[i]);
+                Assert.True(copy[i] == ((MaxHeap<int>)heap)[i]);
             }
 
             Assert.Throws<ArgumentNullException>(() => heap.CopyTo(null, 0));
@@ -220,7 +220,7 @@ namespace Tako.Collections.Generic.Tests
         [Fact()]
         public void GetEnumeratorTest()
         {
-            MinHeap<int> heap = new MinHeap<int>(this.testInts, true);
+            MaxHeap<int> heap = new MaxHeap<int>(this.testInts, true);
             int i = 0;
 
             foreach (int item in (ICollection<int>)heap)

@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="Generic\Llrb23TreeListTests.cs" />
     <Compile Include="Generic\Llrb23TreeTests.cs" />
+    <Compile Include="Generic\MaxHeapTests.cs" />
     <Compile Include="Generic\MinHeapTests.cs" />
     <Compile Include="Generic\SortedLlrb23TreeListTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
