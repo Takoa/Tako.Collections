@@ -96,42 +96,6 @@ namespace Tako.Collections.Generic.Tests
         }
 
         [Fact()]
-        public void GetTest()
-        {
-            MaxHeap<int> heap = new MaxHeap<int>(this.testInts, true);
-
-            Assert.Throws<IndexOutOfRangeException>(() => heap[-1]);
-            Assert.Throws<IndexOutOfRangeException>(() => heap[this.count]);
-        }
-
-        [Fact()]
-        public void LeftParent()
-        {
-            MaxHeap<int> heap = new MaxHeap<int>(this.testInts, true);
-
-            Assert.Throws<IndexOutOfRangeException>(() => heap.GetParent(-1));
-            Assert.Throws<IndexOutOfRangeException>(() => heap.GetParent(this.count));
-        }
-
-        [Fact()]
-        public void LeftTest()
-        {
-            MaxHeap<int> heap = new MaxHeap<int>(this.testInts, true);
-
-            Assert.Throws<IndexOutOfRangeException>(() => heap.GetLeft(-1));
-            Assert.Throws<IndexOutOfRangeException>(() => heap.GetLeft(this.count));
-        }
-
-        [Fact()]
-        public void RightTest()
-        {
-            MaxHeap<int> heap = new MaxHeap<int>(this.testInts, true);
-
-            Assert.Throws<IndexOutOfRangeException>(() => heap.GetRight(-1));
-            Assert.Throws<IndexOutOfRangeException>(() => heap.GetRight(this.count));
-        }
-
-        [Fact()]
         public void InsertTest()
         {
             MaxHeap<int> heap = new MaxHeap<int>(this.testInts, true);
@@ -155,77 +119,6 @@ namespace Tako.Collections.Generic.Tests
                 {
                     Assert.True(right < heap[i]);
                 }
-            }
-        }
-
-        [Fact()]
-        public void ExtractRootTest()
-        {
-            MaxHeap<int> heap = new MaxHeap<int>(this.testInts, true);
-            int[] sortedInts = new int[this.count];
-
-            this.testInts.CopyTo(sortedInts, 0);
-            Array.Sort(sortedInts);
-
-            for (int i = this.count - 1; 0 <= i; i--)
-            {
-                Assert.True(sortedInts[i] == heap.ExtractRoot());
-            }
-
-            Assert.True(heap.ExtractRoot() == 0);
-        }
-
-        [Fact()]
-        public void ClearTest()
-        {
-            MaxHeap<int> heap = new MaxHeap<int>(this.testInts, true);
-
-            ((ICollection<int>)heap).Clear();
-
-            Assert.Throws<IndexOutOfRangeException>(() => heap[0]);
-            Assert.True(heap.ExtractRoot() == 0);
-        }
-
-        [Fact()]
-        public void ContainsTest()
-        {
-            ICollection<int> heap = new MaxHeap<int>(this.testInts, true);
-
-            for (int i = this.count - 1; 0 <= i; i--)
-            {
-                Assert.True(heap.Contains(this.testInts[i]));
-            }
-
-            Assert.False(heap.Contains(-1));
-        }
-
-        [Fact()]
-        public void CopyToTest()
-        {
-            ICollection<int> heap = new MaxHeap<int>(this.testInts, true);
-            int[] copy = new int[this.count];
-
-            heap.CopyTo(copy, 0);
-
-            for (int i = 0; i < this.count; i++)
-            {
-                Assert.True(copy[i] == ((MaxHeap<int>)heap)[i]);
-            }
-
-            Assert.Throws<ArgumentNullException>(() => heap.CopyTo(null, 0));
-            Assert.Throws<ArgumentOutOfRangeException>(() => heap.CopyTo(copy, -1));
-            Assert.Throws<ArgumentException>(() => heap.CopyTo(copy, 1));
-        }
-
-        [Fact()]
-        public void GetEnumeratorTest()
-        {
-            MaxHeap<int> heap = new MaxHeap<int>(this.testInts, true);
-            int i = 0;
-
-            foreach (int item in (ICollection<int>)heap)
-            {
-                Assert.True(item == heap[i++]);
             }
         }
 

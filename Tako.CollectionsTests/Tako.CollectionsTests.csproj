@@ -52,6 +52,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="Generic\HeapTests.cs" />
     <Compile Include="Generic\Llrb23TreeListTests.cs" />
     <Compile Include="Generic\Llrb23TreeTests.cs" />
     <Compile Include="Generic\MaxHeapTests.cs" />
