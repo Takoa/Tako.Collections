@@ -216,7 +216,7 @@ namespace Tako.Collections.Generic
             return ((IEnumerable<T>)this).GetEnumerator();
         }
 
-        protected abstract bool SatisfiesProperty(T item1, T item2);
+        protected abstract bool SatisfiesProperty(T parent, T child);
 
         private void Build()
         {

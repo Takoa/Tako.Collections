@@ -1,8 +1,6 @@
 Tako.Collections
 ================
 
-This library contains a C# implementation of
-
 - Left-Leaning Red-Black (2-3) Tree
     - [Robert Sedgewick. Left-leaning Red–Black Trees][1]
     - [Robert Sedgewick. Left-Leaning Red–Black Trees (slides)][2]
@@ -10,14 +8,8 @@ This library contains a C# implementation of
     - You can use it like System.Collections.Generic.List&lt;T&gt;, but the performance is of LLRB.
 - Sorted List based on LLRB tree
     - A sorted version of LLRB tree list.
-- Min-Heap
+- Min/Max-Heap
 
-> Takao Kaburaki  
->
-> - E-mail : tacker.oct@live.jp  
->
-> *Please don't hesitate to contact me!*  
->
 > Written with [StackEdit](http://benweet.github.io/stackedit/).
 
 

@@ -27,9 +27,9 @@ namespace Tako.Collections.Generic
         {
         }
 
-        protected override bool SatisfiesProperty(T item1, T item2)
+        protected override bool SatisfiesProperty(T parent, T child)
         {
-            return 0 < this.Comparer.Compare(item1, item2);
+            return 0 < this.Comparer.Compare(parent, child);
         }
     }
 }

@@ -26,7 +26,7 @@ namespace Tako.Collections.Generic.Tests
         [Fact()]
         public void GetTest()
         {
-            MaxHeap<int> heap = new MaxHeap<int>(this.testInts, true);
+            Heap<int> heap = new MaxHeap<int>(this.testInts, true);
 
             Assert.Throws<IndexOutOfRangeException>(() => heap[-1]);
             Assert.Throws<IndexOutOfRangeException>(() => heap[this.count]);
@@ -35,7 +35,7 @@ namespace Tako.Collections.Generic.Tests
         [Fact()]
         public void LeftParent()
         {
-            MaxHeap<int> heap = new MaxHeap<int>(this.testInts, true);
+            Heap<int> heap = new MaxHeap<int>(this.testInts, true);
 
             Assert.Throws<IndexOutOfRangeException>(() => heap.GetParent(-1));
             Assert.Throws<IndexOutOfRangeException>(() => heap.GetParent(this.count));
@@ -44,7 +44,7 @@ namespace Tako.Collections.Generic.Tests
         [Fact()]
         public void LeftTest()
         {
-            MaxHeap<int> heap = new MaxHeap<int>(this.testInts, true);
+            Heap<int> heap = new MaxHeap<int>(this.testInts, true);
 
             Assert.Throws<IndexOutOfRangeException>(() => heap.GetLeft(-1));
             Assert.Throws<IndexOutOfRangeException>(() => heap.GetLeft(this.count));
@@ -53,7 +53,7 @@ namespace Tako.Collections.Generic.Tests
         [Fact()]
         public void RightTest()
         {
-            MaxHeap<int> heap = new MaxHeap<int>(this.testInts, true);
+            Heap<int> heap = new MaxHeap<int>(this.testInts, true);
 
             Assert.Throws<IndexOutOfRangeException>(() => heap.GetRight(-1));
             Assert.Throws<IndexOutOfRangeException>(() => heap.GetRight(this.count));
@@ -62,7 +62,7 @@ namespace Tako.Collections.Generic.Tests
         [Fact()]
         public void ExtractRootTest()
         {
-            MaxHeap<int> heap = new MaxHeap<int>(this.testInts, true);
+            Heap<int> heap = new MaxHeap<int>(this.testInts, true);
             int[] sortedInts = new int[this.count];
 
             this.testInts.CopyTo(sortedInts, 0);
@@ -79,7 +79,7 @@ namespace Tako.Collections.Generic.Tests
         [Fact()]
         public void ClearTest()
         {
-            MaxHeap<int> heap = new MaxHeap<int>(this.testInts, true);
+            Heap<int> heap = new MaxHeap<int>(this.testInts, true);
 
             ((ICollection<int>)heap).Clear();
 
